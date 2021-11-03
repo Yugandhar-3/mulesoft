@@ -6,14 +6,15 @@ public class MuleSoft {
     {
         try
         {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/mulesoft","root","yugandharVPD@3");
+            Class.forName("org.sqlite.JDBC");
+            Connection con=DriverManager.getConnection("jdbc:sqlite:product.db");
             Statement st= con.createStatement();
             String query= "create table if not exists Movies"+"(moviename varchar(200),"+"leadactor varchar(200),"+"actress varchar(200),"+"yearofrelease int,"+"directorname varchar(200));";
             st.executeUpdate(query);
             Scanner sc=new Scanner(System.in);
             System.out.println("1.insert data into table");
             System.out.println("2.retrieve");
+            System.out.println("3.get movie name based on actor name");
             int choice =sc.nextInt();
             switch (choice)
             {
@@ -47,7 +48,16 @@ public class MuleSoft {
                         System.out.print(", YearOfRelease: "+rs.getInt("yearofrelease"));
                         System.out.println(", DirectorName: "+rs.getString("directorname"));
                     }
-            }
+                case 3:
+
+                    String s=sc.next();
+                    String sq="select moviename from Movies where leadactor == ?";
+                    PreparedStatement preparedStatement=con.prepareStatement(sq);
+                    preparedStatement.setString(1,s);
+                    ResultSet rset = preparedStatement.executeQuery();
+                    while(rset.next())
+                    {                    System.out.println(rset.getString("moviename"));
+                    }}
         }
         catch(Exception e)
         {
